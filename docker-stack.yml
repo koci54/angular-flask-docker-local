@@ -1,0 +1,40 @@
+services:
+  backend:
+    build:
+      context: /home/petr/clone/backend
+    environment:
+      BACKEND_CORS_ORIGINS: http://localhost
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/blog
+      traefik.port: '80'
+      traefik.tags: cspa.com
+    volumes:
+    - /home/petr/clone/backend/app:/app:rw
+  frontend:
+    build:
+      args:
+        FRONTEND_ENV: development
+      context: /home/petr/clone/frontend
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: PathPrefix:/
+      traefik.port: '80'
+      traefik.tags: cspa.com
+  proxy:
+    command: --docker \ --docker.watch \ --docker.exposedbydefault=false \ --constraints=tag==cspa.com
+      \ --logLevel=DEBUG \ --accessLog \ --web
+    image: traefik:v1.7
+    labels:
+      traefik.enable: "true"
+      traefik.frontend.rule: Host:localhost
+      traefik.port: '80'
+    ports:
+    - published: 80
+      target: 80
+    - published: 8090
+      target: 8080
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:rw
+version: '3.3'
+
