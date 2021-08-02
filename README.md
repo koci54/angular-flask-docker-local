@@ -13,4 +13,5 @@ You should be able to access the application on `http://localhost`
 `docker-compose down` Stops containers and removes containers, networks, volumes, and images created by `up`.
 
 This is a very minimum app for learning and testing purposes. 
+
 The goal of this exercise was to fetch data from a backend (simple flask app)
